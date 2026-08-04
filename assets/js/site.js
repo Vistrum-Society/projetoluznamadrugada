@@ -313,20 +313,21 @@
     wrap.innerHTML =
       '<svg xmlns="http://www.w3.org/2000/svg"><defs>'+
       '<filter id="lm-desenho" color-interpolation-filters="sRGB">'+
-        '<feColorMatrix in="SourceGraphic" type="saturate" values="0.15" result="quase"/>'+
-        '<feComponentTransfer in="quase" result="claro">'+
-          '<feFuncR type="linear" slope="0.5" intercept="0.48"/>'+
-          '<feFuncG type="linear" slope="0.5" intercept="0.45"/>'+
-          '<feFuncB type="linear" slope="0.5" intercept="0.40"/>'+
+        '<feColorMatrix in="SourceGraphic" type="saturate" values="1.35" result="sat"/>'+
+        '<feComponentTransfer in="sat" result="post">'+
+          '<feFuncR type="discrete" tableValues="0.04 0.20 0.36 0.52 0.68 0.84 1"/>'+
+          '<feFuncG type="discrete" tableValues="0.04 0.20 0.36 0.52 0.68 0.84 1"/>'+
+          '<feFuncB type="discrete" tableValues="0.06 0.22 0.38 0.54 0.70 0.86 1"/>'+
         '</feComponentTransfer>'+
+        '<feGaussianBlur in="post" stdDeviation="0.6" result="postb"/>'+
         '<feColorMatrix in="SourceGraphic" type="saturate" values="0" result="gray"/>'+
         '<feConvolveMatrix in="gray" order="3" preserveAlpha="true" kernelMatrix="0 -1 0 -1 4 -1 0 -1 0" result="edge"/>'+
         '<feComponentTransfer in="edge" result="lines">'+
-          '<feFuncR type="linear" slope="-1.9" intercept="1"/>'+
-          '<feFuncG type="linear" slope="-1.9" intercept="1"/>'+
-          '<feFuncB type="linear" slope="-1.9" intercept="1"/>'+
+          '<feFuncR type="linear" slope="-1.5" intercept="1"/>'+
+          '<feFuncG type="linear" slope="-1.5" intercept="1"/>'+
+          '<feFuncB type="linear" slope="-1.5" intercept="1"/>'+
         '</feComponentTransfer>'+
-        '<feBlend in="claro" in2="lines" mode="multiply"/>'+
+        '<feBlend in="postb" in2="lines" mode="multiply"/>'+
       '</filter></defs></svg>';
     document.body.appendChild(wrap);
   }
@@ -340,9 +341,17 @@
       cx.classList.add('morph');
       var arte = img.getAttribute('data-desenho');
       var camada = document.createElement('div');
-      camada.className = 'morph-desenho' + (arte ? '' : ' filtro');
+      camada.className = 'morph-desenho';
       var di = document.createElement('img');
-      di.src = arte || img.currentSrc || img.src; di.alt = ''; di.setAttribute('aria-hidden','true');
+      di.alt = ''; di.setAttribute('aria-hidden','true');
+      if(arte){
+        // tenta a pintura real (ex.: gerada no Magnific). Se não existir o
+        // arquivo ainda, cai no filtro pictórico automaticamente.
+        di.onerror = function(){ di.onerror = null; camada.classList.add('filtro'); di.src = img.currentSrc || img.src; };
+        di.src = arte;
+      } else {
+        camada.classList.add('filtro'); di.src = img.currentSrc || img.src;
+      }
       camada.appendChild(di);
       cx.appendChild(camada);
       var tag = document.createElement('span'); tag.className = 'morph-tag'; tag.textContent = 'foto · desenho';

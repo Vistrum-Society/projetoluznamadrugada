@@ -1,0 +1,24 @@
+PINTURAS (desenho colorido das fotos) — pasta de troca
+
+O site já mostra as fotos virando "desenho" com um efeito pictórico feito
+no próprio navegador (colorido, sem depender de arquivo nenhum). Isso
+funciona de imediato.
+
+Quando você tiver as pinturas em alta geradas no Magnific (estilo Arcane),
+é só colocar os arquivos aqui com estes nomes exatos, e o site passa a usar
+a pintura de verdade no lugar do efeito automático:
+
+  horta.jpg               -> pintura da foto da horta
+  patio.jpg               -> pintura da foto do pátio (árvores de tronco branco)
+  jardim.jpg              -> pintura da foto do canteiro central com a casa
+  placa-familia-piva.jpg  -> pintura da foto da placa da Família Piva
+
+Regras para o efeito de transição ficar perfeito:
+1 - A pintura precisa ser da MESMA foto (mesma composição e enquadramento),
+    só que repintada. Assim a foto "vira" a pintura sem pular.
+2 - Use o mesmo formato/proporção da foto original.
+3 - Se um arquivo não existir aqui, o site usa o efeito automático. Nada quebra.
+
+Observação técnica (para quem for automatizar): no ambiente atual a política
+de rede bloqueia o CDN do Magnific, então o download das pinturas para dentro
+do site precisa ser feito à mão (ou em um ambiente sem esse bloqueio).
