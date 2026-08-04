@@ -304,12 +304,78 @@
     });
   }
 
+  /* ════════════════ MORPH FOTO -> DESENHO ════════════════ */
+  function injetarFiltro(){
+    if(document.getElementById('lm-filtros')) return;
+    var wrap = document.createElement('div');
+    wrap.id = 'lm-filtros'; wrap.setAttribute('aria-hidden','true');
+    wrap.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
+    wrap.innerHTML =
+      '<svg xmlns="http://www.w3.org/2000/svg"><defs>'+
+      '<filter id="lm-desenho" color-interpolation-filters="sRGB">'+
+        '<feColorMatrix in="SourceGraphic" type="saturate" values="0.15" result="quase"/>'+
+        '<feComponentTransfer in="quase" result="claro">'+
+          '<feFuncR type="linear" slope="0.5" intercept="0.48"/>'+
+          '<feFuncG type="linear" slope="0.5" intercept="0.45"/>'+
+          '<feFuncB type="linear" slope="0.5" intercept="0.40"/>'+
+        '</feComponentTransfer>'+
+        '<feColorMatrix in="SourceGraphic" type="saturate" values="0" result="gray"/>'+
+        '<feConvolveMatrix in="gray" order="3" preserveAlpha="true" kernelMatrix="0 -1 0 -1 4 -1 0 -1 0" result="edge"/>'+
+        '<feComponentTransfer in="edge" result="lines">'+
+          '<feFuncR type="linear" slope="-1.9" intercept="1"/>'+
+          '<feFuncG type="linear" slope="-1.9" intercept="1"/>'+
+          '<feFuncB type="linear" slope="-1.9" intercept="1"/>'+
+        '</feComponentTransfer>'+
+        '<feBlend in="claro" in2="lines" mode="multiply"/>'+
+      '</filter></defs></svg>';
+    document.body.appendChild(wrap);
+  }
+  function morphFotos(){
+    injetarFiltro();
+    var reduz = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var itens = [];
+    document.querySelectorAll('.card-foto .foto:not(.foto-pendente), [data-morph]').forEach(function(cx){
+      var img = cx.querySelector('img'); if(!img) return;
+      if(cx.querySelector('.morph-desenho')) return;
+      cx.classList.add('morph');
+      var arte = img.getAttribute('data-desenho');
+      var camada = document.createElement('div');
+      camada.className = 'morph-desenho' + (arte ? '' : ' filtro');
+      var di = document.createElement('img');
+      di.src = arte || img.currentSrc || img.src; di.alt = ''; di.setAttribute('aria-hidden','true');
+      camada.appendChild(di);
+      cx.appendChild(camada);
+      var tag = document.createElement('span'); tag.className = 'morph-tag'; tag.textContent = 'foto · desenho';
+      cx.appendChild(tag);
+      var it = { cx:cx, camada:camada, cur:1, alvo:1, hover:false };
+      cx.addEventListener('pointerenter', function(){ it.hover = true; });
+      cx.addEventListener('pointerleave', function(){ it.hover = false; });
+      itens.push(it);
+    });
+    if(!itens.length || reduz) return;
+    function laco(){
+      var vh = window.innerHeight, cen = vh/2;
+      for(var i=0;i<itens.length;i++){
+        var it = itens[i], r = it.cx.getBoundingClientRect();
+        if(r.bottom < -80 || r.top > vh+80){ continue; }
+        var d = Math.abs((r.top + r.height/2) - cen) / cen;      // 0 centro, 1 borda
+        d = Math.max(0, Math.min(1, d));
+        var alvo = it.hover ? 0 : (0.12 + d*0.88);               // no centro sobra um fio de desenho
+        it.cur += (alvo - it.cur) * 0.12;
+        it.camada.style.opacity = it.cur.toFixed(3);
+      }
+      requestAnimationFrame(laco);
+    }
+    requestAnimationFrame(laco);
+  }
+
   /* ════════════════ INICIAR ════════════════ */
   function iniciar(){
     montarNav();
     montarRodape();
     arteHero();
     seloHeadlines();
+    morphFotos();
     document.querySelectorAll('canvas.estrelas').forEach(estrelas);
     scrollDawn();
     accordions();
