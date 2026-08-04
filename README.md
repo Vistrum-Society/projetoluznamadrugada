@@ -41,7 +41,26 @@ assets/
   img/
     logo-luz-na-madrugada.png   Símbolo (extraído dos materiais existentes)
     fotos/                       Fotos reais do projeto (reaproveitadas do media kit)
+    art/                         Ilustração autoral (SVG): cena de hero e traço de luz
 ```
+
+### Linguagem de ilustração autoral
+
+Para dar identidade original ao site (sem depender de banco de imagem nem de
+fotos genéricas), foi criado um sistema de arte vetorial próprio na paleta da
+madrugada, redesenhando o conceito do logo — figuras que se erguem da noite em
+direção à primeira luz.
+
+1 - `art/cena-madrugada.svg`: ilustração-assinatura, presente no hero de todas as
+páginas. Três figuras (noite, transição e luz) sobem pelo arco rumo ao sol
+nascente, com estrelas, constelação e a cruz. Anima sozinha e reage suavemente
+ao ponteiro do mouse.
+2 - Selo ilustrado em toda headline: cada rótulo de seção recebe um selo com
+glifo autoral, escolhido pelo tema da seção (acolher, caminho, casa, pessoas,
+coração, escudo, luz, entre outros). Injetado por JS, sem imagem de terceiros.
+3 - `art/traco-luz.svg`: traço dourado desenhado à mão sob a palavra-chave dos
+títulos de hero.
+4 - Transições de entrada em "cortina de luz" (clip-path) conforme a página rola.
 
 ### Sistema visual (resumo)
 

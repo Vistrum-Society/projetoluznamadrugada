@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 600" fill="none" role="img" aria-label="Figuras que se erguem da noite em direção à primeira luz">
+  <defs>
+    <linearGradient id="arco" x1="60" y1="520" x2="500" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5FA8DC"/>
+      <stop offset=".5" stop-color="#E89A4B"/>
+      <stop offset="1" stop-color="#F0C000"/>
+    </linearGradient>
+    <linearGradient id="fig1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9FD4F5"/><stop offset="1" stop-color="#5FA8DC"/></linearGradient>
+    <linearGradient id="fig2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0D488"/><stop offset="1" stop-color="#E89A4B"/></linearGradient>
+    <linearGradient id="fig3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBE7B0"/><stop offset="1" stop-color="#F0C000"/></linearGradient>
+    <radialGradient id="sol" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#F0C000" stop-opacity=".95"/>
+      <stop offset=".45" stop-color="#E88A2A" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#E88A2A" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .flt{animation:flt 6s ease-in-out infinite}
+      .flt2{animation:flt 5.2s ease-in-out infinite .5s}
+      .flt3{animation:flt 4.6s ease-in-out infinite 1s}
+      @keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+      .raios{transform-box:view-box;transform-origin:388px 452px;animation:gira 46s linear infinite}
+      @keyframes gira{to{transform:rotate(360deg)}}
+      .halo{transform-box:view-box;transform-origin:388px 452px;animation:pulsa 5s ease-in-out infinite}
+      @keyframes pulsa{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.06);opacity:1}}
+      .est{animation:cint 3.4s ease-in-out infinite}
+      .est2{animation:cint 2.8s ease-in-out infinite .7s}
+      .est3{animation:cint 4s ease-in-out infinite 1.4s}
+      @keyframes cint{0%,100%{opacity:.35}50%{opacity:1}}
+      @media (prefers-reduced-motion:reduce){.flt,.flt2,.flt3,.raios,.halo,.est,.est2,.est3{animation:none}}
+    </style>
+  </defs>
+
+  <!-- sol / primeira luz -->
+  <g class="halo"><circle cx="388" cy="452" r="150" fill="url(#sol)"/></g>
+  <g class="raios" stroke="#F0C000" stroke-width="2" stroke-linecap="round" opacity=".55">
+    <line x1="388" y1="452" x2="388" y2="286"/>
+    <line x1="388" y1="452" x2="512" y2="360"/>
+    <line x1="388" y1="452" x2="540" y2="452"/>
+    <line x1="388" y1="452" x2="264" y2="360"/>
+    <line x1="388" y1="452" x2="236" y2="452"/>
+    <line x1="388" y1="452" x2="300" y2="574"/>
+    <line x1="388" y1="452" x2="476" y2="574"/>
+  </g>
+  <circle cx="388" cy="452" r="46" fill="#F0C000" opacity=".18"/>
+  <circle cx="388" cy="452" r="30" fill="#F0D488"/>
+
+  <!-- arco da marca -->
+  <path d="M70 528 C 120 300, 300 118, 500 150" stroke="url(#arco)" stroke-width="6" stroke-linecap="round" opacity=".9"/>
+  <path d="M70 528 C 120 300, 300 118, 500 150" stroke="#FBF8F2" stroke-width="1.4" stroke-linecap="round" opacity=".25"/>
+
+  <!-- cruz discreta no alto -->
+  <g stroke="#C4392E" stroke-width="5" stroke-linecap="round" opacity=".9" transform="translate(150 120)">
+    <line x1="0" y1="-16" x2="0" y2="30"/>
+    <line x1="-13" y1="2" x2="15" y2="-2"/>
+  </g>
+
+  <!-- figura 1 (noite) -->
+  <g transform="translate(150 438)"><g class="flt">
+    <path d="M0 52 C -17 26, -17 4, 0 -8 C 17 4, 17 26, 0 52 Z" fill="url(#fig1)"/>
+    <circle cx="0" cy="-22" r="11" fill="#9FD4F5"/>
+    <path d="M3 8 C 18 -6, 30 -20, 34 -40" stroke="#9FD4F5" stroke-width="6" stroke-linecap="round" fill="none"/>
+  </g></g>
+
+  <!-- figura 2 (transição) -->
+  <g transform="translate(262 340)"><g class="flt2">
+    <path d="M0 58 C -19 30, -19 4, 0 -9 C 19 4, 19 30, 0 58 Z" fill="url(#fig2)"/>
+    <circle cx="0" cy="-25" r="12" fill="#F0D488"/>
+    <path d="M4 6 C 20 -8, 33 -24, 37 -46" stroke="#F0D488" stroke-width="6.5" stroke-linecap="round" fill="none"/>
+  </g></g>
+
+  <!-- figura 3 (luz) -->
+  <g transform="translate(378 252)"><g class="flt3">
+    <path d="M0 64 C -21 32, -21 4, 0 -11 C 21 4, 21 32, 0 64 Z" fill="url(#fig3)"/>
+    <circle cx="0" cy="-29" r="13" fill="#FBE7B0"/>
+    <path d="M5 4 C 22 -12, 36 -30, 40 -54" stroke="#FBE7B0" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <path d="M-5 4 C -20 -10, -31 -26, -34 -46" stroke="#FBE7B0" stroke-width="7" stroke-linecap="round" fill="none"/>
+  </g></g>
+
+  <!-- estrelas / constelação -->
+  <g fill="#9FD4F5">
+    <circle class="est" cx="90" cy="180" r="2.4"/>
+    <circle class="est2" cx="140" cy="250" r="1.8"/>
+    <circle class="est3" cx="230" cy="150" r="2.2"/>
+    <circle class="est" cx="300" cy="90" r="1.8"/>
+    <circle class="est2" cx="440" cy="110" r="2.4"/>
+    <circle class="est3" cx="500" cy="240" r="1.8"/>
+    <circle class="est" cx="70" cy="300" r="1.8"/>
+  </g>
+  <g stroke="#5FA8DC" stroke-width="1" opacity=".3">
+    <line x1="90" y1="180" x2="140" y2="250"/>
+    <line x1="230" y1="150" x2="300" y2="90"/>
+    <line x1="440" y1="110" x2="500" y2="240"/>
+  </g>
+</svg>

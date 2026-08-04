@@ -234,10 +234,82 @@
     alvos.forEach(function(a){ io.observe(a); });
   }
 
+  /* ════════════════ ARTE DE HERO ════════════════ */
+  function arteHero(){
+    document.querySelectorAll('.hero').forEach(function(hero){
+      if(hero.querySelector('.hero-arte')) return;
+      var d = document.createElement('div');
+      d.className = 'hero-arte'; d.setAttribute('aria-hidden','true');
+      d.innerHTML = '<img src="'+url('assets/img/art/cena-madrugada.svg')+'" alt="">';
+      var canvas = hero.querySelector('canvas.estrelas');
+      if(canvas) canvas.insertAdjacentElement('afterend', d);
+      else hero.insertAdjacentElement('afterbegin', d);
+    });
+    // paralaxe suave seguindo o ponteiro (só em telas largas, sem reduced-motion)
+    if(window.matchMedia('(min-width:941px)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      window.addEventListener('pointermove', function(e){
+        var nx = (e.clientX / window.innerWidth - .5);
+        var ny = (e.clientY / window.innerHeight - .5);
+        document.querySelectorAll('.hero-arte').forEach(function(a){
+          a.style.transform = 'translateY(-48%) translate('+(nx*16).toFixed(1)+'px,'+(ny*12).toFixed(1)+'px)';
+        });
+      }, {passive:true});
+    }
+  }
+
+  /* ════════════════ SELO ILUSTRADO NAS HEADLINES ════════════════ */
+  var GLIFOS = {
+    acolher:'<path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/>',
+    caminho:'<path d="M5 19h6a3 3 0 0 0 3-3V8a3 3 0 0 1 3-3h2"/><circle cx="4" cy="19" r="1.6"/><circle cx="20" cy="5" r="1.6"/>',
+    casa:'<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
+    pessoas:'<path d="M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="3.2"/><path d="M22 20v-2a4 4 0 0 0-3-3.8"/><path d="M16 4.2a3.2 3.2 0 0 1 0 6"/>',
+    luz:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5.6 5.6 4.2 4.2M19.8 19.8l-1.4-1.4M18.4 5.6l1.4-1.4M4.2 19.8l1.4-1.4"/>',
+    coracao:'<path d="M20.8 5.6a5.2 5.2 0 0 0-7.4 0L12 7l-1.4-1.4a5.2 5.2 0 1 0-7.4 7.4L12 21.4l8.8-8.4a5.2 5.2 0 0 0 0-7.4z"/>',
+    escudo:'<path d="M12 3l7 3v5c0 4.4-3 8-7 9-4-1-7-4.6-7-9V6z"/><path d="M9 12l2 2 4-4"/>',
+    estrela:'<path d="M12 3l2.5 5.2 5.5.8-4 4 1 5.6L12 21l-5-2.8 1-5.6-4-4 5.5-.8z"/>',
+    balao:'<path d="M21 11.5a8.4 8.4 0 0 1-11.5 7.8L3 21l1.7-6.4A8.4 8.4 0 1 1 21 11.5z"/>',
+    broto:'<path d="M12 21v-8"/><path d="M12 13c0-3 2.2-5 5-5 0 3-2.2 5-5 5z"/><path d="M12 13c0-2.6-2-4.4-4.4-4.4C7.6 11 9.6 13 12 13z"/>',
+    bussola:'<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>'
+  };
+  function motivoPara(txt){
+    txt = (txt||'').toLowerCase();
+    var m = [
+      ['acolh',  'acolher'], ['ajuda','acolher'],
+      ['etapa','caminho'], ['caminho','caminho'], ['como funciona','caminho'], ['dia na casa','caminho'],
+      ['históri','casa'], ['a casa','casa'], ['a sede','casa'], ['estrutura','casa'],
+      ['parceir','pessoas'], ['caminha com','pessoas'], ['lideran','pessoas'], ['quem','pessoas'],
+      ['doa','coracao'], ['apadrinh','coracao'], ['espécie','coracao'], ['manter','coracao'],
+      ['transparên','escudo'], ['identifica','escudo'], ['registro','escudo'], ['certifica','escudo'], ['contas','escudo'],
+      ['número','estrela'], ['n025','estrela'],
+      ['contato','balao'], ['canais','balao'], ['fale','balao'], ['pergunta','balao'],
+      ['frente','broto'], ['trabalho','broto'], ['sustento','broto'], ['rotina','broto'], ['convivên','broto'], ['capacita','broto'],
+      ['fé','luz'], ['fundamento','luz'], ['guia','bussola'], ['missão','bussola'], ['nos move','luz'], ['conceito','luz'],
+      ['atalho','pessoas']
+    ];
+    for(var i=0;i<m.length;i++){ if(txt.indexOf(m[i][0])>=0) return m[i][1]; }
+    return 'luz';
+  }
+  function seloHeadlines(){
+    // um selo ilustrado antes de cada rótulo de seção (toda headline)
+    document.querySelectorAll('.rotulo').forEach(function(rot){
+      var pai = rot.parentElement;
+      if(!pai || pai.previousElementSibling && pai.previousElementSibling.classList && pai.previousElementSibling.classList.contains('selo-headline')) return;
+      if(rot.previousElementSibling && rot.previousElementSibling.classList.contains('selo-headline')) return;
+      var tit = pai.querySelector('.secao-titulo');
+      var chave = motivoPara(rot.textContent + ' ' + (tit?tit.textContent:''));
+      var selo = document.createElement('div');
+      selo.className = 'selo-headline'; selo.setAttribute('aria-hidden','true');
+      selo.innerHTML = '<svg viewBox="0 0 24 24">'+(GLIFOS[chave]||GLIFOS.luz)+'</svg>';
+      rot.insertAdjacentElement('beforebegin', selo);
+    });
+  }
+
   /* ════════════════ INICIAR ════════════════ */
   function iniciar(){
     montarNav();
     montarRodape();
+    arteHero();
+    seloHeadlines();
     document.querySelectorAll('canvas.estrelas').forEach(estrelas);
     scrollDawn();
     accordions();
