@@ -1,0 +1,26 @@
+PASTA DE FOTOS + PINTURAS (arraste seus arquivos do Drive para cá)
+
+O site já está programado para usar exatamente estes nomes. É só copiar os
+arquivos da sua pasta do Drive "luz-na-madrugada-pinturas" para dentro desta
+pasta. Assim que os arquivos estiverem aqui, o site troca o placeholder pela
+foto real e liga o efeito de foto virando pintura.
+
+Arquivos esperados (mesmos nomes que você já criou):
+
+  patio-fotoreal.jpeg        e   patio-pintura.jpeg
+  claweber-fotoreal.jpeg     e   claweber-pintura.jpeg
+  majorjuliano-fotoreal.jpeg e   majorjuliano-pintura.jpeg
+
+Onde cada par aparece no site:
+1 - patio        -> página "A instituição", bloco "A casa hoje"
+2 - claweber     -> página "Parceiros", card "Cla Weber"
+3 - majorjuliano -> página "Parceiros", card "Brigada Militar"
+
+Regras:
+1 - Mantenha os nomes exatamente como estão acima (minúsculas, com hífen).
+2 - Cada "-fotoreal" precisa ter o "-pintura" correspondente do mesmo enquadramento.
+3 - Se faltar algum arquivo, o site não quebra: mostra a foto que já existe ou
+    o efeito automático, e usa a pintura de verdade assim que o arquivo aparecer.
+
+Quer adicionar mais cenas depois? Repita o padrão: nome-fotoreal.jpeg e
+nome-pintura.jpeg, e me peça para ligar no site.

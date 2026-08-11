@@ -331,51 +331,78 @@
       '</filter></defs></svg>';
     document.body.appendChild(wrap);
   }
+  var morphItens = [], morphRodando = false;
+  function morphLaco(){
+    var vh = window.innerHeight, cen = vh/2;
+    for(var i=0;i<morphItens.length;i++){
+      var it = morphItens[i], r = it.cx.getBoundingClientRect();
+      if(r.bottom < -80 || r.top > vh+80){ continue; }
+      var d = Math.abs((r.top + r.height/2) - cen) / cen;      // 0 centro, 1 borda
+      d = Math.max(0, Math.min(1, d));
+      var alvo = it.hover ? 0 : (0.12 + d*0.88);               // no centro sobra um fio de desenho
+      it.cur += (alvo - it.cur) * 0.12;
+      it.camada.style.opacity = it.cur.toFixed(3);
+    }
+    requestAnimationFrame(morphLaco);
+  }
+  function registrarMorph(cx){
+    var img = cx.querySelector('img'); if(!img) return;
+    if(cx.querySelector('.morph-desenho')) return;
+    cx.classList.add('morph');
+    var arte = img.getAttribute('data-desenho');
+    var camada = document.createElement('div');
+    camada.className = 'morph-desenho';
+    var di = document.createElement('img');
+    di.alt = ''; di.setAttribute('aria-hidden','true');
+    if(arte){
+      // tenta a pintura real (gerada no Magnific). Se o arquivo ainda não
+      // existir, cai no filtro pictórico automaticamente.
+      di.onerror = function(){ di.onerror = null; camada.classList.add('filtro'); di.src = img.currentSrc || img.src; };
+      di.src = arte;
+    } else {
+      camada.classList.add('filtro'); di.src = img.currentSrc || img.src;
+    }
+    camada.appendChild(di);
+    cx.appendChild(camada);
+    var tag = document.createElement('span'); tag.className = 'morph-tag'; tag.textContent = 'foto · desenho';
+    cx.appendChild(tag);
+    var it = { cx:cx, camada:camada, cur:1, hover:false };
+    cx.addEventListener('pointerenter', function(){ it.hover = true; });
+    cx.addEventListener('pointerleave', function(){ it.hover = false; });
+    morphItens.push(it);
+    if(!morphRodando && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      morphRodando = true; requestAnimationFrame(morphLaco);
+    }
+  }
   function morphFotos(){
     injetarFiltro();
-    var reduz = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var itens = [];
-    document.querySelectorAll('.card-foto .foto:not(.foto-pendente), [data-morph]').forEach(function(cx){
-      var img = cx.querySelector('img'); if(!img) return;
-      if(cx.querySelector('.morph-desenho')) return;
-      cx.classList.add('morph');
-      var arte = img.getAttribute('data-desenho');
-      var camada = document.createElement('div');
-      camada.className = 'morph-desenho';
-      var di = document.createElement('img');
-      di.alt = ''; di.setAttribute('aria-hidden','true');
-      if(arte){
-        // tenta a pintura real (ex.: gerada no Magnific). Se não existir o
-        // arquivo ainda, cai no filtro pictórico automaticamente.
-        di.onerror = function(){ di.onerror = null; camada.classList.add('filtro'); di.src = img.currentSrc || img.src; };
-        di.src = arte;
-      } else {
-        camada.classList.add('filtro'); di.src = img.currentSrc || img.src;
-      }
-      camada.appendChild(di);
-      cx.appendChild(camada);
-      var tag = document.createElement('span'); tag.className = 'morph-tag'; tag.textContent = 'foto · desenho';
-      cx.appendChild(tag);
-      var it = { cx:cx, camada:camada, cur:1, alvo:1, hover:false };
-      cx.addEventListener('pointerenter', function(){ it.hover = true; });
-      cx.addEventListener('pointerleave', function(){ it.hover = false; });
-      itens.push(it);
+    document.querySelectorAll('.card-foto .foto:not(.foto-pendente):not([data-foto]), [data-morph]:not([data-foto])').forEach(registrarMorph);
+  }
+  // Slots que esperam a foto do Drive: .foto[data-foto]. Se o arquivo existir
+  // na pasta, troca pelo par foto real + pintura e liga o morph. Se não existir,
+  // mantém a foto que já está no repositório (ou o placeholder), sem quebrar.
+  function upgradeFotos(){
+    document.querySelectorAll('.foto[data-foto]').forEach(function(cx){
+      var real = cx.getAttribute('data-foto');
+      var pint = cx.getAttribute('data-desenho');
+      var origImg = cx.querySelector('img');
+      var alt = cx.getAttribute('data-alt') || (origImg ? origImg.alt : '');
+      var probe = new Image();
+      probe.onload = function(){
+        cx.classList.remove('foto-pendente');
+        cx.innerHTML = '';
+        var img = document.createElement('img');
+        img.src = real; img.alt = alt; img.setAttribute('loading','lazy');
+        if(pint) img.setAttribute('data-desenho', pint);
+        cx.appendChild(img);
+        registrarMorph(cx);
+      };
+      probe.onerror = function(){
+        // arquivo do Drive ainda não colocado: usa a foto do repositório se houver
+        if(origImg) registrarMorph(cx);
+      };
+      probe.src = real;
     });
-    if(!itens.length || reduz) return;
-    function laco(){
-      var vh = window.innerHeight, cen = vh/2;
-      for(var i=0;i<itens.length;i++){
-        var it = itens[i], r = it.cx.getBoundingClientRect();
-        if(r.bottom < -80 || r.top > vh+80){ continue; }
-        var d = Math.abs((r.top + r.height/2) - cen) / cen;      // 0 centro, 1 borda
-        d = Math.max(0, Math.min(1, d));
-        var alvo = it.hover ? 0 : (0.12 + d*0.88);               // no centro sobra um fio de desenho
-        it.cur += (alvo - it.cur) * 0.12;
-        it.camada.style.opacity = it.cur.toFixed(3);
-      }
-      requestAnimationFrame(laco);
-    }
-    requestAnimationFrame(laco);
   }
 
   /* ════════════════ INICIAR ════════════════ */
@@ -385,6 +412,7 @@
     arteHero();
     seloHeadlines();
     morphFotos();
+    upgradeFotos();
     document.querySelectorAll('canvas.estrelas').forEach(estrelas);
     scrollDawn();
     accordions();
