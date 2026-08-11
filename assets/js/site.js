@@ -339,7 +339,7 @@
       if(r.bottom < -80 || r.top > vh+80){ continue; }
       var d = Math.abs((r.top + r.height/2) - cen) / cen;      // 0 centro, 1 borda
       d = Math.max(0, Math.min(1, d));
-      var alvo = it.hover ? 0 : (0.12 + d*0.88);               // no centro sobra um fio de desenho
+      var alvo = it.hover ? 1 : Math.min(0.5, 0.06 + d*0.55);  // hover = pintura cheia; ao rolar, drift suave
       it.cur += (alvo - it.cur) * 0.12;
       it.camada.style.opacity = it.cur.toFixed(3);
     }
