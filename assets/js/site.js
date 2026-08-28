@@ -111,7 +111,7 @@
         '</div>'+
       '</div>'+
       '<div class="container rodape-fim">'+
-        '<small>© 2013—2026 Projeto Luz na Madrugada · Associação privada sem fins lucrativos</small>'+
+        '<small>© 2011—2026 Projeto Luz na Madrugada · Associação privada sem fins lucrativos</small>'+
         '<span class="assinatura">Aqui, a vida acontece, floresce e dá frutos</span>'+
       '</div>';
   }
